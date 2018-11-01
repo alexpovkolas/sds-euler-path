@@ -1,9 +1,10 @@
 #include <iostream>
 #include <vector>
 #import <stack>
+#import <set>
 
 
-#define __PROFILE__
+//#define __PROFILE__
 
 #ifdef __PROFILE__
 
@@ -15,9 +16,16 @@
 using namespace std;
 
 
-void print_euler_path(vector<vector<int>> &edges, vector<int> &result){
-    int root = 1;
+void print_euler_path(vector<set<int>> &edges, vector<int> &result){
+    int root = 0;
     stack<int> st;
+
+    for (int i = 0; i < edges.size(); ++i) {
+        if (!edges[i].empty()) {
+            root = i;
+            break;
+        }
+    }
     st.push(root);
 
     while (!st.empty()) {
@@ -28,8 +36,10 @@ void print_euler_path(vector<vector<int>> &edges, vector<int> &result){
         if (edges[top].empty()) {
             st.pop();
         } else {
-            st.push(edges[top].back());
-            edges[top].pop_back();
+            int next = *edges[top].begin();
+            st.push(next);
+            edges[top].erase(edges[top].begin());
+            edges[next].erase(top);
         }
     }
 }
@@ -43,7 +53,7 @@ int main() {
     int n = 0;
     cin >> n;
 
-    vector<vector<int>> edges(n + 1);
+    vector<set<int>> edges(n + 1);
     vector<int> result;
     result.reserve(2*n-1);
 
@@ -51,15 +61,11 @@ int main() {
         int vertex1 = 0;
         int vertex2 = 0;
         cin >> vertex1 >> vertex2;
-        edges[vertex1].push_back(vertex2);
-        //edges[vertex2].push_back(vertex1);
+        edges[vertex1].insert(vertex2);
+        edges[vertex2].insert(vertex1);
     }
 
     print_euler_path(edges, result);
-
-//    if (result.size() != 2*n - 1) {
-//        return 1;
-//    }
 
     for (int i = 0; i < result.size(); ++i) {
         cout << result[i];
