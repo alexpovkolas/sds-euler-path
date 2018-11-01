@@ -2,7 +2,7 @@
 #include <vector>
 
 
-//#define __PROFILE__
+#define __PROFILE__
 
 #ifdef __PROFILE__
 
@@ -14,12 +14,12 @@
 using namespace std;
 
 
-void print_euler_path(vector<vector<int>> &edges){
+void print_euler_path(vector<vector<int>> &edges, vector<int> &result){
     int root = 1;
     int next = root;
 
     while (true) {
-        cout << next << " ";
+        result.push_back(next);
 
         if (edges[next].empty()) {
             break;
@@ -41,6 +41,8 @@ int main() {
     cin >> n;
 
     vector<vector<int>> edges(n + 1);
+    vector<int> result;
+    result.reserve(2*n-1);
 
     for (int i = 0; i < n - 1; ++i) {
         int vertex1 = 0;
@@ -50,7 +52,16 @@ int main() {
         edges[vertex2].push_back(vertex1);
     }
 
-    print_euler_path(edges);
+    print_euler_path(edges, result);
+
+    for (int i = 0; i < result.size(); ++i) {
+        cout << result[i];
+        if (i < result.size() - 1) {
+            cout << " ";
+        } else {
+            cout << endl;
+        }
+    }
 
 #ifdef __PROFILE__
 
