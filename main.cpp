@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#import <stack>
 
 
 #define __PROFILE__
@@ -16,17 +17,19 @@ using namespace std;
 
 void print_euler_path(vector<vector<int>> &edges, vector<int> &result){
     int root = 1;
-    int next = root;
+    stack<int> st;
+    st.push(root);
 
-    while (true) {
-        result.push_back(next);
+    while (!st.empty()) {
 
-        if (edges[next].empty()) {
-            break;
+        int top = st.top();
+        result.push_back(top);
+
+        if (edges[top].empty()) {
+            st.pop();
         } else {
-            int prev = next;
-            next = edges[next].back();
-            edges[prev].pop_back();
+            st.push(edges[top].back());
+            edges[top].pop_back();
         }
     }
 }
@@ -49,10 +52,14 @@ int main() {
         int vertex2 = 0;
         cin >> vertex1 >> vertex2;
         edges[vertex1].push_back(vertex2);
-        edges[vertex2].push_back(vertex1);
+        //edges[vertex2].push_back(vertex1);
     }
 
     print_euler_path(edges, result);
+
+//    if (result.size() != 2*n - 1) {
+//        return 1;
+//    }
 
     for (int i = 0; i < result.size(); ++i) {
         cout << result[i];
