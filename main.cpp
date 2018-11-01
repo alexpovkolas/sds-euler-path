@@ -1,12 +1,8 @@
 #include <iostream>
 #include <vector>
-#include <algorithm>
-#include <functional>
-#include <math.h>
 
 
-
-#define __PROFILE__
+//#define __PROFILE__
 
 #ifdef __PROFILE__
 
@@ -18,6 +14,23 @@
 using namespace std;
 
 
+void print_euler_path(vector<vector<int>> &edges){
+    int root = 1;
+    int next = root;
+
+    while (true) {
+        cout << next << " ";
+
+        if (edges[next].empty()) {
+            break;
+        } else {
+            int prev = next;
+            next = edges[next].back();
+            edges[prev].pop_back();
+        }
+    }
+}
+
 int main() {
 #ifdef __PROFILE__
     ifstream in("input");
@@ -25,12 +38,19 @@ int main() {
 #endif
 
     int n = 0;
-    vector<pair<int, int>> edges(n);
+    cin >> n;
 
-    for (int i = 0; i < n; ++i) {
-        cin >> edges[i].first>> edges[i].second;
+    vector<vector<int>> edges(n + 1);
+
+    for (int i = 0; i < n - 1; ++i) {
+        int vertex1 = 0;
+        int vertex2 = 0;
+        cin >> vertex1 >> vertex2;
+        edges[vertex1].push_back(vertex2);
+        edges[vertex2].push_back(vertex1);
     }
 
+    print_euler_path(edges);
 
 #ifdef __PROFILE__
 
